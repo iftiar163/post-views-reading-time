@@ -38,4 +38,9 @@ class Webxperthub_PVRT_Settings {
             'tracked_post_types' => array( 'post' ),
         ];
     }
+
+    public static function get_settings() {
+        $saved = get_option( self::OPTION_NAME, [] );
+        return wp_parse_args( $saved, self::get_defaults() );
+    }
 }

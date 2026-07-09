@@ -39,6 +39,8 @@ class Webxperthub_PVRT_Tracker {
             true
         );
 
+        $settings = Webxperthub_PVRT_Settings::get_settings();
+
         wp_localize_script(
             'webxperthub-pvrt-tracker',
             'webxperthubPvrtData',
@@ -46,6 +48,7 @@ class Webxperthub_PVRT_Tracker {
                 'ajaxUrl' => admin_url( 'admin-ajax.php' ),
                 'nonce'   => wp_create_nonce( 'webxperthub_pvrt_track_view' ),
                 'postId'  => get_the_ID(),
+                'minReadingTime' => $settings['min_reading_time'],
             )
         );
     }
@@ -69,8 +72,13 @@ class Webxperthub_PVRT_Tracker {
             wp_send_json_error( array( 'message' => 'Invalid post ID' ), 400 );
         }
 
-        if ( 'publish' !== get_post_status( $post_id ) ) {
-            wp_send_json_error( array( 'message' => 'Post is not published' ), 404 );
+        // if ( 'publish' !== get_post_status( $post_id ) ) {
+        //     wp_send_json_error( array( 'message' => 'Post is not published' ), 404 );
+        // }
+
+        $settings = Webxperthub_PVRT_Settings::get_settings();
+        if( ! in_array( get_post_type( $post_id ), $settings['tracked_post_types'], true ) ) {
+            wp_send_json_error( array( 'message' => 'Post type not tracked' ), 403 );
         }
 
         $time_spent = isset( $_POST['time_spent'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['time_spent'] ) ) : 0;
@@ -101,7 +109,8 @@ class Webxperthub_PVRT_Tracker {
             return false;
         }
 
-        $excluded_roles = array( 'administrator', 'editor', 'author', 'contributor' );
+        $settings       = Webxperthub_PVRT_Settings::get_settings();
+        $excluded_roles = $settings['excluded_roles'];
         $user           = wp_get_current_user();
         $matched        = array_intersect( $excluded_roles, (array) $user->roles );
 
@@ -127,8 +136,13 @@ class Webxperthub_PVRT_Tracker {
             wp_send_json_error( array( 'message' => 'Invalid post ID' ), 400 );
         }
 
-        if ( 'publish' !== get_post_status( $post_id ) ) {
-            wp_send_json_error( array( 'message' => 'Post is not published' ), 404 );
+        // if ( 'publish' !== get_post_status( $post_id ) ) {
+        //     wp_send_json_error( array( 'message' => 'Post is not published' ), 404 );
+        // }
+
+        $settings = Webxperthub_PVRT_Settings::get_settings();
+        if( ! in_array( get_post_type( $post_id ), $settings['tracked_post_types'], true ) ) {
+            wp_send_json_error( array( 'message' => 'Post type not tracked' ), 403 );
         }
 
         $current_views = (int) get_post_meta( $post_id, WEBXPERTHUB_PVRT_META_VIEWS, true );

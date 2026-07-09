@@ -44,7 +44,7 @@
                 // Silently fail — never show errors to visitors
             } );
 
-        }, 2000 );
+        }, ( webxperthubPvrtData.minReadingTime * 1000 ) );
 
     } );
 
@@ -58,7 +58,7 @@
 
         var timeSpent = Math.round( ( Date.now() - pageLoadTime ) / 1000 );
 
-        if ( timeSpent < 3 ) {
+        if ( timeSpent < webxperthubPvrtData.minReadingTime ) {
             return;
         }
 

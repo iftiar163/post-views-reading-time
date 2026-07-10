@@ -62,7 +62,7 @@ class Webxperthub_PVRT_Settings {
     }
 
     // Sanitize Settings
-    public function sanitize_settings( $input ) {
+    public static function sanitize_settings( $input ) {
 
         $defaults = self::get_defaults();
         $output = [];

@@ -77,8 +77,8 @@ class Webxperthub_PVRT_Tracker {
         // }
 
         $settings = Webxperthub_PVRT_Settings::get_settings();
-        if( ! in_array( get_post_type( $post_id ), $settings['tracked_post_types'], true ) ) {
-            wp_send_json_error( array( 'message' => 'Post type not tracked' ), 403 );
+        if ( (bool) get_post_meta( $post_id, WEBXPERTHUB_PVRT_META_EXCLUDE, true ) ) {
+            wp_send_json_success( array( 'message' => 'Post excluded from tracking' ) );
         }
 
         $time_spent = isset( $_POST['time_spent'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['time_spent'] ) ) : 0;
@@ -141,8 +141,8 @@ class Webxperthub_PVRT_Tracker {
         // }
 
         $settings = Webxperthub_PVRT_Settings::get_settings();
-        if( ! in_array( get_post_type( $post_id ), $settings['tracked_post_types'], true ) ) {
-            wp_send_json_error( array( 'message' => 'Post type not tracked' ), 403 );
+        if ( (bool) get_post_meta( $post_id, WEBXPERTHUB_PVRT_META_EXCLUDE, true ) ) {
+            wp_send_json_success( array( 'message' => 'Post excluded from tracking' ) );
         }
 
         $current_views = (int) get_post_meta( $post_id, WEBXPERTHUB_PVRT_META_VIEWS, true );
